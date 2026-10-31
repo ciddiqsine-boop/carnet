@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mon Carnet Digital</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0b1b3a">
+<meta name="apple-mobile-web-app-title" content="Mon Carnet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f5f2ea;--card:#fff;--ink:#0b1b3a;--mute:#5b6784;--gold:#a87a10;--goldbg:#f3e3b0;--line:#e2dccb;--red:#b3261e;--green:#1b7a46;--navy:#0b1b3a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081330;--card:#112250;--ink:#f6efdc;--mute:#a9b4d0;--gold:#e5bd4f;--goldbg:#3a3213;--line:#233669;--red:#ff8a80;--green:#6fd49b}}
+:root[data-theme="dark"]{--bg:#081330;--card:#112250;--ink:#f6efdc;--mute:#a9b4d0;--gold:#e5bd4f;--goldbg:#3a3213;--line:#233669;--red:#ff8a80;--green:#6fd49b}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+main{max-width:560px;margin:0 auto;padding:16px 14px 110px}
+h1{font-size:22px;margin:0 0 2px;font-weight:800}
+h2{font-size:17px;margin:22px 0 8px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 14px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.hero{background:var(--navy);color:#f6efdc;border-radius:18px;padding:20px;margin-bottom:12px}
+.hero small{color:#c9d2ea;font-size:14px}
+.hero .big{font-size:34px;font-weight:800;color:#e5bd4f;line-height:1.15;margin-top:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:18px}.stat span{color:var(--mute);font-size:13px}
+label{display:block;font-size:13px;color:var(--mute);margin:8px 0 3px}
+input,select{width:100%;font:inherit;font-size:16px;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+textarea{width:100%;font:inherit;font-size:13px;min-height:110px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+button,.btn{font:inherit;font-weight:600;font-size:15px;border:0;border-radius:10px;padding:10px 14px;background:var(--gold);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+:root:not([data-theme="light"]) button,:root:not([data-theme="light"]) .btn{color:#14100a}
+button.ghost,.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.small{padding:6px 10px;font-size:14px;flex:0 0 auto}
+button.full{width:100%;margin-top:12px}
+.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .t{font-weight:600}.item .m{color:var(--mute);font-size:13px}
+.amt{font-weight:800;white-space:nowrap}.neg{color:var(--red)}.pos{color:var(--green)}
+.tag{display:inline-block;background:var(--goldbg);color:var(--gold);border-radius:8px;padding:1px 8px;font-size:12px;font-weight:600}
+.empty{color:var(--mute);text-align:center;padding:18px 6px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--navy);display:flex;justify-content:center;padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+nav .in{display:flex;max-width:560px;width:100%}
+nav button{flex:1;background:transparent;color:#c9d2ea;padding:6px 2px;font-size:12px;font-weight:600;border-radius:8px}
+nav button span{display:block;font-size:20px}
+nav button.on{color:#e5bd4f}
+:root:not([data-theme="light"]) nav button{color:#c9d2ea}:root:not([data-theme="light"]) nav button.on{color:#e5bd4f}
+#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#f6efdc;border:1px solid #e5bd4f;padding:10px 14px;border-radius:12px;font-size:15px;max-width:90%;z-index:20;text-align:center}
+:root:not([data-theme="light"]) button.ghost,:root:not([data-theme="light"]) .btn.ghost{color:var(--ink)}
+.row.wrap{flex-wrap:wrap}.row.wrap>*{flex:1 1 38%}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav><div class="in" id="nav"></div></nav>
+<div id="toast" role="status"></div>
+<script>
+var KEY='carnet_digital_v1';
+var S={sales:[],products:[],clients:[]};
+var tab='home';
+try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&p.sales&&p.products&&p.clients)S=p;}}catch(e){}
+S.shop=S.shop||'';S.boss=S.boss||'';S.emp=S.emp||'';S.pin=S.pin||'';S.exp=S.exp||[];S.epin=S.epin||'';S.ntfy=S.ntfy||'';S.lang=S.lang||(/^en/i.test(navigator.language||'')?'en':'fr');S.sid=S.sid||(Math.random().toString(36)+'000000').slice(2,8).toUpperCase();S.first=S.first||today();S.proUntil=S.proUntil||'';var locked=!!S.pin;save();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){try{note('Mémoire du téléphone pleine : les dernières modifications ne sont pas sauvegardées. Retirez des photos.')}catch(x){}}}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt(n){return Math.round(n).toLocaleString('fr-FR')+' FCFA'}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function dfr(s){var a=s.split('-');return a[2]+'/'+a[1]+'/'+a[0]}
+function $(id){return document.getElementById(id)}
+var armed=null;
+function note(t){var e=$('toast');e.textContent=tr(t);e.style.display='block';clearTimeout(note.t);note.t=setTimeout(function(){e.style.display='none'},2800)}
+function ask(key,text,fn){if(armed===key){armed=null;fn()}else{armed=key;note(text+' Appuyez encore pour confirmer.');setTimeout(function(){if(armed===key)armed=null},3500)}}
+function go(t){tab=t;editId='';editCid='';pendPic='';render();window.scrollTo(0,0)}
+function totalDebt(){return S.clients.reduce(function(a,c){return a+Math.max(0,c.balance)},0)}
+
+var TABS=[['home','🏠','Accueil'],['sales','🧾','Ventes'],['stock','📦','Stock'],['debts','📒','Dettes'],['more','⚙️','Plus']];
+
+function render0(){
+  if(locked){$('nav').innerHTML='';$('app').innerHTML=vLock();return}
+  $('nav').innerHTML=TABS.filter(function(t){return role!=='emp'||(t[0]!=='bilan'&&t[0]!=='more')}).map(function(t){return '<button class="'+(tab===t[0]?'on':'')+'" onclick="go(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join('');
+  var v={home:vHome,sales:vSales,stock:vStock,debts:vDebts,bilan:vBilan,pro:vPro,att:vAtt,more:vMore}[tab];
+  $('app').innerHTML=langBtn()+(tab==='home'&&role!=='emp'?proBanner():'')+(tab==='sales'?dayCard():'')+(tab==='sales'||tab==='debts'?alertCard():'')+v()+(tab==='home'?(!isPro()?'<button class="ghost full" onclick="go(\'pro\')">🔒 Résumé du jour (Pro)</button>':'<a class="btn" style="display:block;margin-top:12px" target="_blank" rel="noopener" href="'+summaryLink()+'">Envoyer le résumé du jour sur WhatsApp</a>'):'')+(tab==='home'&&S.pin?'<button class="ghost full" onclick="lockNow()">Verrouiller le carnet</button>':'');
+}
+
+function vHome(){
+  var t=today(),m=t.slice(0,7),day=0,mon=0;
+  S.sales.forEach(function(s){if(s.date===t)day+=s.amount;if(s.date.slice(0,7)===m)mon+=s.amount});
+  var low=S.products.filter(function(p){return p.qty<=p.min});
+  var top=S.clients.filter(function(c){return c.balance>0}).sort(function(a,b){return b.balance-a.balance}).slice(0,3);
+  var h='<h1>'+esc(S.shop||'Mon carnet')+'</h1><p class="sub">Vos ventes, votre stock et vos dettes au même endroit.</p>';
+  h+='<div class="hero"><small>Ce que vos clients vous doivent</small><div class="big">'+fmt(totalDebt())+'</div></div>';
+  h+='<div class="grid"><div class="stat"><span>Ventes du jour</span><b>'+fmt(day)+'</b></div>'+(role==='emp'?'':'<div class="stat"><span>Ventes du mois</span><b>'+fmt(mon)+'</b></div>')+'</div>';
+  var nl=S.clients.filter(late).length;if(nl)h+='<div class="card"><b class="neg">'+nl+' client'+(nl>1?'s':'')+' en retard de paiement</b></div>';
+  h+='<h2>Plus gros soldes à récupérer</h2><div class="card">';
+  h+=top.length?top.map(function(c){return '<div class="item"><div class="t">'+esc(c.name)+'</div><div class="amt neg">'+fmt(c.balance)+'</div></div>'}).join(''):'<div class="empty">Aucune dette pour le moment. Ajoutez un client dans l’onglet Dettes.</div>';
+  h+='</div><h2>Produits à réapprovisionner</h2><div class="card">';
+  h+=low.length?low.map(function(p){return '<div class="item"><div class="t">'+esc(p.name)+'</div><div class="amt neg">'+p.qty+' en stock</div></div>'}).join(''):'<div class="empty">Aucun produit en stock bas.</div>';
+  return h+'</div>';
+}
+
+function vSales(){
+  var po='<option value="">Aucun produit du stock</option>'+S.products.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+' ('+p.qty+')</option>'}).join('');
+  var co='<option value="">Payé comptant</option>'+S.clients.map(function(c){return '<option value="'+c.id+'"'+(c.id===cartCid?' selected':'')+'>À crédit : '+esc(c.name)+'</option>'}).join('');
+  var h='<h1>Ventes</h1><p class="sub">Notez chaque vente. Une vente à crédit s’ajoute à la dette du client.</p>';
+  h+='<div class="card"><label>Description</label><input id="sl" placeholder="Ex. 2 sacs de riz">';
+  h+='<label>Choisir le produit (le stock baisse tout seul)</label><select id="sp" onchange="calc()">'+po+'</select>';
+  h+='<div id="sv"></div>';
+  h+='<div class="row"><div><label>Quantité</label><input id="sq" oninput="calc()" type="number" inputmode="numeric" min="1" value="1"></div><div><label>Montant (FCFA)</label><input id="sa" type="number" inputmode="numeric" min="0" placeholder="Auto si produit"></div></div>';
+  h+='<label>Paiement</label><select id="sc" onchange="cartCid=this.value">'+co+'</select>';
+  h+='<label>Moyen de paiement (si payé comptant)</label><select id="sm" onchange="payMode=this.value">'+payOpts()+'</select>';
+  h+=cartHtml()+'<button class="ghost full" onclick="addLine()">Ajouter un autre article au panier</button><button class="full" onclick="addSale()">Enregistrer la vente'+(cart.length?' ('+fmt(cartTotal())+')':'')+'</button></div>';
+  h+='<h2>Dernières ventes</h2><div class="card">';
+  var l=S.sales.slice().reverse().slice(0,30);
+  h+=l.length?l.map(function(s,i){var hd=(i===0||l[i-1].date!==s.date)?'<div class="item" style="background:var(--goldbg);border-radius:8px;padding:6px 10px;margin-top:6px"><b>'+dfr(s.date)+'</b><b>'+fmt(dayTotal(s.date))+'</b></div>':'';return hd+'<div class="item"><div><div class="t">'+esc(s.label)+'</div><div class="m">'+dfr(s.date)+(s.time?' à '+s.time:'')+(s.emp?' – '+esc(s.emp):'')+(s.pay&&s.pay!=='Espèces'?' <span class="tag">'+esc(s.pay)+'</span>':'')+(s.client?' <span class="tag">crédit : '+esc(s.client)+'</span>':'')+'</div></div><div style="text-align:right"><div class="amt">'+fmt(s.amount)+'</div>'+(role==='emp'?'':'<button class="ghost small" style="margin-top:4px" onclick="delSale(\''+s.id+'\')">Annuler</button>')+'</div></div>'}).join(''):'<div class="empty">Aucune vente enregistrée.</div>';
+  return h+'</div>';
+}
+function addSaleOld(){
+  var pid=$('sp').value,qty=parseInt($('sq').value,10)||1,cid=$('sc').value,amt=parseFloat($('sa').value),label=$('sl').value.trim();
+  var p=S.products.filter(function(x){return x.id===pid})[0];
+  if(isNaN(amt)&&p&&p.price)amt=p.price*qty;
+  if(isNaN(amt)||amt<=0){note('Indiquez un montant.');return}
+  if(!label)label=p?p.name+' x'+qty:'Vente';
+  if(p)p.qty=Math.max(0,p.qty-qty);
+  var c=S.clients.filter(function(x){return x.id===cid})[0],sale={id:uid(),date:today(),label:label,amount:amt,pid:p?p.id:'',qty:qty,cid:c?c.id:'',time:nowt(),emp:S.emp,cost:p?(p.cost||0)*qty:0,nc:(p&&p.cost)?0:1};
+  if(c){c.balance+=amt;c.history.push({d:today(),t:'dette',a:amt,n:label});sale.client=c.name}
+  S.sales.push(sale);alertTo(shopTag()+'nouvelle vente\n'+label+' : '+fmt(amt)+(c?'\nÀ crédit : '+c.name:'\nPayé comptant')+stamp());save();render();note('Vente enregistrée : '+fmt(amt)+'. Total du jour : '+fmt(dayTotal(today()))+(!p&&S.products.length?'. Aucun produit choisi : stock inchangé.':''));
+}
+
+var alertLink='';
+function nowt(){return new Date().toTimeString().slice(0,5)}
+function shopTag(){return (S.shop||'Boutique')+' : '}
+function stamp(){return (S.emp?'\nEmployé : '+S.emp:'')+'\nLe '+dfr(today())+' à '+nowt()}
+function bossLink(t){var n=S.boss.replace(/\D/g,'');if(n.length===9)n='237'+n;return 'https://wa.me/'+n+'?text='+encodeURIComponent(tr(t))}
+function alertTo(t){alertLink=S.boss?bossLink(t):''}
+function alertCard(){if(!alertLink)return '';return '<div class="card" style="border-color:var(--gold)"><div class="t">Prévenir le patron</div><p class="m">Appuyez pour envoyer le résumé sur WhatsApp.</p><a class="btn" style="display:block;margin-top:6px" target="_blank" rel="noopener" onclick="setTimeout(function(){alertLink=\'\';render()},800)" href="'+alertLink+'">Envoyer sur WhatsApp</a><button class="ghost" style="width:100%;margin-top:8px" onclick="alertLink=\'\';render()">Plus tard</button></div>'}
+function setQty(id,v){var n=parseInt(v,10);if(isNaN(n)||n<0){note('Indiquez une quantité valide.');render();return}S.products.forEach(function(p){if(p.id===id)p.qty=n});save();render();note('Stock mis à jour.')}
+function saveAlert(){S.boss=$('bn').value.trim();S.emp=$('en').value.trim();save();note('Enregistré.')}
+var editId='';var bmonth=today().slice(0,7);
+TABS.splice(4,0,['bilan','📊','Bilan']);
+function dayTotal(d){return S.sales.reduce(function(a,s){return a+(s.date===d?s.amount:0)},0)}
+function dayCard(){return rcptCard()+'<div class="hero" style="padding:14px 16px"><small>Total des ventes du jour</small><div class="big" style="font-size:28px">'+fmt(dayTotal(today()))+'</div></div>'}
+function calc(){var p=S.products.filter(function(x){return x.id===$('sp').value})[0],q=parseInt($('sq').value,10)||1;if(p&&p.price)$('sa').value=p.price*q;$('sv').innerHTML=p&&p.pic?'<img src="'+p.pic+'" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:10px;margin-top:8px">':''}
+function editProd(id){editId=id;pendPic='';render();var p=S.products.filter(function(x){return x.id===id})[0];if(!p)return;$('pn').value=p.name;$('pq').value=p.qty;$('pm').value=p.min;$('pp').value=p.price||'';$('pk').value=p.cost||'';$('pbtn').textContent=tr('Enregistrer les modifications');window.scrollTo(0,0)}
+function setM(v){if(v)bmonth=v;render()}
+function addExp(){var l=$('xl').value.trim(),a=parseFloat($('xa').value);if(!l||isNaN(a)||a<=0){note('Indiquez la description et le montant.');return}S.exp.push({id:uid(),date:bmonth===today().slice(0,7)?today():bmonth+'-01',label:l,amount:a});save();render();note('Dépense enregistrée.')}
+function delExp(id){ask('x'+id,'Supprimer cette dépense ?',function(){S.exp=S.exp.filter(function(e){return e.id!==id});save();render()})}
+function vBilan(){if(!isPro())return proWall('Bilan du mois','Découvrez ce que la boutique gagne vraiment chaque mois.');var m=bmonth,rev=0,cr=0,cg=0,nc=0,ex=0;
+  S.sales.forEach(function(s){if(s.date.slice(0,7)===m){rev+=s.amount;if(s.client)cr+=s.amount;cg+=s.cost||0;if(s.nc!==0)nc++}});
+  var el=S.exp.filter(function(e){return e.date.slice(0,7)===m});el.forEach(function(e){ex+=e.amount});
+  var pf=rev-cg-ex;
+  var h='<h1>Bilan du mois</h1><p class="sub">Ce que la boutique a vraiment gagné.</p><div class="card"><label style="margin-top:0">Mois</label><input type="month" value="'+m+'" onchange="setM(this.value)"></div>';
+  h+='<div class="hero"><small>Bénéfice du mois</small><div class="big" style="'+(pf<0?'color:#ff8a80':'')+'">'+fmt(pf)+'</div>'+(rev?'<small>Marge : '+Math.round(pf/rev*100)+' % des ventes</small>':'')+'</div>';
+  h+='<div class="grid"><div class="stat"><span>Ventes</span><b>'+fmt(rev)+'</b></div><div class="stat"><span>Coût des produits vendus</span><b>'+fmt(cg)+'</b></div><div class="stat"><span>Dépenses</span><b>'+fmt(ex)+'</b></div><div class="stat"><span>Dont vendu à crédit</span><b>'+fmt(cr)+'</b></div></div>';
+  if(nc)h+='<div class="card"><b class="neg">'+nc+' vente'+(nc>1?'s':'')+' sans prix d’achat.</b><p class="m">Le bénéfice est probablement trop élevé. Renseignez le prix d’achat dans Stock (bouton ✎) et choisissez le produit lors des ventes.</p></div>';
+  h+='<h2>Dépenses du mois</h2><div class="card"><label style="margin-top:0">Description</label><input id="xl" placeholder="Ex. Transport, loyer"><label>Montant (FCFA)</label><input id="xa" type="number" inputmode="numeric" min="0"><button class="full" onclick="addExp()">Ajouter la dépense</button></div><div class="card">';
+  h+=el.length?el.map(function(e){return '<div class="item"><div><div class="t">'+esc(e.label)+'</div><div class="m">'+dfr(e.date)+'</div></div><div style="text-align:right"><div class="amt">'+fmt(e.amount)+'</div><button class="ghost small" style="margin-top:4px" onclick="delExp(\''+e.id+'\')">Supprimer</button></div></div>'}).join(''):'<div class="empty">Aucune dépense ce mois-ci.</div>';
+  return h+'</div>'}
+var role='patron';
+function lockNow(){locked=true;render()}
+function setEpin(){var v=$('pin2').value.trim();if(v&&!isPro()){note('Le mode employé est une fonction Pro.');go('pro');return}if(!S.pin){note('Définissez d’abord le code du patron.');return}if(v&&!/^\d{4,8}$/.test(v)){note('Le code doit avoir 4 à 8 chiffres.');return}if(v&&v===S.pin){note('Le code employé doit être différent.');return}S.epin=v;save();note(v?'Code employé activé.':'Code employé retiré.')}
+function vStockEmp(){var h='<h1>Stock</h1><p class="sub">Quantités disponibles. Pour modifier le stock, voyez le patron.</p><div class="card">';h+=S.products.length?S.products.map(function(p){return '<div class="item"><div>'+(p.pic?'<img src="'+p.pic+'" alt="" style="float:left;margin-right:10px;width:44px;height:44px;object-fit:cover;border-radius:8px">':'')+'<div class="t">'+esc(p.name)+'</div><div class="m">'+(p.price?fmt(p.price)+' l’unité':'')+'</div></div><div class="amt '+(p.qty<=p.min?'neg':'')+'">'+p.qty+'</div></div>'}).join(''):'<div class="empty">Aucun produit.</div>';return h+'</div>'}
+var cart=[],cartCid='',lastGrp='';
+function curLine(){var pid=$('sp').value,qty=parseInt($('sq').value,10)||1,amt=parseFloat($('sa').value),label=$('sl').value.trim();
+  var p=S.products.filter(function(x){return x.id===pid})[0];
+  if(isNaN(amt)&&p&&p.price)amt=p.price*qty;
+  if(isNaN(amt)||amt<=0)return null;
+  if(!label)label=p?p.name+' x'+qty:'Vente';
+  return {pid:p?p.id:'',qty:qty,label:label,amount:amt}}
+function addLine(){var l=curLine();if(!l){note('Indiquez un montant.');return}cart.push(l);render();note('Article ajouté au panier.')}
+function cartTotal(){return cart.reduce(function(a,l){return a+l.amount},0)}
+function cartHtml(){if(!cart.length)return '';return '<div style="margin-top:12px">'+cart.map(function(l,i){return '<div class="item"><div class="t">'+esc(l.label)+'</div><div class="row" style="flex:0 0 auto"><b>'+fmt(l.amount)+'</b><button class="ghost small" onclick="cart.splice('+i+',1);render()" aria-label="Retirer">✕</button></div></div>'}).join('')+'</div>'}
+function addSale(){var lines=cart.slice(),l=curLine();if(l)lines.push(l);
+  if(!lines.length){note('Indiquez un montant.');return}
+  var over=lines.filter(function(ln){var p=S.products.filter(function(x){return x.id===ln.pid})[0];return p&&ln.qty>p.qty});
+  if(over.length&&armed!=='over'){ask('over','Stock insuffisant : '+over.map(function(l){return l.label}).join(', ')+'.',function(){});return}
+  armed=null;
+  var c=S.clients.filter(function(x){return x.id===$('sc').value})[0],g=uid(),tot=0,det=[],miss=0;
+  lines.forEach(function(ln){var p=S.products.filter(function(x){return x.id===ln.pid})[0];
+    if(p)p.qty=Math.max(0,p.qty-ln.qty);else if(S.products.length)miss=1;
+    var s={id:uid(),grp:g,date:today(),label:ln.label,amount:ln.amount,pid:ln.pid,qty:ln.qty,cid:c?c.id:'',time:nowt(),emp:S.emp,pay:c?'':payMode,cost:p?(p.cost||0)*ln.qty:0,nc:(p&&p.cost)?0:1};
+    if(c){c.balance+=ln.amount;c.history.push({d:today(),t:'dette',a:ln.amount,n:ln.label});s.client=c.name}
+    S.sales.push(s);tot+=ln.amount;det.push(ln.label+' : '+fmt(ln.amount))});
+  cart=[];lastGrp=g;payMode='Espèces';
+  alertTo(shopTag()+'nouvelle vente\n'+det.join('\n')+'\nTotal : '+fmt(tot)+(c?'\nÀ crédit : '+c.name:'\nPayé comptant')+stamp());
+  pushN(shopTag()+'nouvelle vente '+fmt(tot)+(c?' (crédit)':'')+(S.emp?' – '+S.emp:'')+' – '+nowt());save();render();note('Vente enregistrée : '+fmt(tot)+'. Total du jour : '+fmt(dayTotal(today()))+(miss?'. Article sans produit choisi : stock inchangé.':''))}
+function rcptCard(){if(!lastGrp||!isPro())return '';var ss=S.sales.filter(function(s){return s.grp===lastGrp});if(!ss.length)return '';
+  var c=S.clients.filter(function(x){return x.id===ss[0].cid})[0],n=c&&c.phone?c.phone.replace(/\D/g,''):'';if(n.length===9)n='237'+n;
+  var tot=ss.reduce(function(a,s){return a+s.amount},0);
+  var t=(S.shop||'Boutique')+'\nReçu du '+dfr(ss[0].date)+' à '+ss[0].time+'\n'+ss.map(function(s){return s.label+' : '+fmt(s.amount)}).join('\n')+'\nTotal : '+fmt(tot)+(c?'\nÀ crédit. Solde : '+fmt(c.balance):'\nPayé comptant')+'\nMerci de votre confiance !';
+  return '<div class="card" style="border-color:var(--gold)"><div class="t">Reçu client</div><p class="m">Total '+fmt(tot)+'. Envoyez le reçu sur WhatsApp.</p><a class="btn" style="display:block;margin-top:6px" target="_blank" rel="noopener" href="https://wa.me/'+n+'?text='+encodeURIComponent(tr(t))+'">Envoyer le reçu</a><button class="ghost" style="width:100%;margin-top:8px" onclick="lastGrp=\'\';render()">Fermer</button></div>'}
+function summaryLink(){var t=today(),n=0,tot=0,cr=0,pay=0,bm={};
+  S.sales.forEach(function(s){if(s.date===t){n++;tot+=s.amount;if(s.client)cr+=s.amount;else{var k=s.pay||'Mode non précisé';bm[k]=(bm[k]||0)+s.amount}}});
+  S.clients.forEach(function(c){c.history.forEach(function(x){if(x.d===t&&x.t==='paiement'&&!/^Annulation/.test(x.n))pay+=x.a})});
+  var low=S.products.filter(function(p){return p.qty<=p.min}).map(function(p){return p.name+' ('+p.qty+')'});
+  var m=(S.shop||'Boutique')+' : résumé du '+dfr(t)+(S.emp?'\nEmployé : '+S.emp:'')+'\nVentes : '+n+' pour '+fmt(tot)+'\nDont à crédit : '+fmt(cr)+'\nEncaissé comptant : '+fmt(tot-cr)+Object.keys(bm).map(function(k){return '\n   '+k+' : '+fmt(bm[k])}).join('')+'\nPaiements de dettes reçus : '+fmt(pay)+'\nDettes totales des clients : '+fmt(totalDebt())+(low.length?'\nÀ réapprovisionner : '+low.join(', '):'');
+  var b=S.boss.replace(/\D/g,'');if(b.length===9)b='237'+b;return 'https://wa.me/'+b+'?text='+encodeURIComponent(tr(m))}
+var payMode='Espèces';
+function payOpts(){return ['Espèces','Orange Money','MTN MoMo'].map(function(m){return '<option'+(m===payMode?' selected':'')+'>'+m+'</option>'}).join('')}
+var PRO={price:1500,om:'',mtn:'',wa:''};
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function addDays(s,n){var d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return ymd(d)}
+function daysLeft(u){return Math.round((new Date(u+'T12:00:00')-new Date(today()+'T12:00:00'))/86400000)}
+function trialEnd(){return addDays(S.first,14)}
+function proEnd(){return S.proUntil>trialEnd()?S.proUntil:trialEnd()}
+function isPro(){return proEnd()>=today()}
+function paid(){return S.proUntil>=today()}
+function h53(s){var a=0xdeadbeef,b=0x41c6ce57;for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return 4294967296*(2097151&b)+(a>>>0)}
+function chk(s,e){return h53(s+e+'k7Q!x2mZ9vR4').toString(36).toUpperCase().slice(0,5)}
+function proWall(t,x){return '<h1>'+t+'</h1><div class="card"><div class="t">🔒 Fonction Pro</div><p class="m">'+x+'</p><button class="full" onclick="go(\'pro\')">Voir le Pro</button></div>'}
+function proBanner(){var left=daysLeft(proEnd());
+  if(left<0)return '<div class="card" style="border-color:var(--red)"><b class="neg">Votre Pro est terminé.</b><p class="m">Vos données restent accessibles. Renouvelez pour retrouver le bilan, le résumé du jour, les reçus et le mode employé.</p><button class="full" style="margin-top:0" onclick="go(\'pro\')">Renouveler</button></div>';
+  if(paid())return left<=7?'<div class="card" style="border-color:var(--gold)"><b>Votre abonnement se termine dans '+left+' jour(s).</b><button class="full" onclick="go(\'pro\')">Renouveler</button></div>':'';
+  return '<div class="card" style="border-color:var(--gold)"><b>Essai Pro gratuit : '+left+' jour(s) restant(s)</b><p class="m">Bilan du mois, résumé du jour, reçus client et mode employé.</p><button class="full" style="margin-top:0" onclick="go(\'pro\')">Voir le Pro</button></div>'}
+function proStatusCard(){var left=daysLeft(proEnd());return '<div class="card"><div class="t">Abonnement</div><p class="m">'+(paid()?'Pro actif jusqu’au '+dfr(S.proUntil):(left>=0?'Essai gratuit : '+left+' jour(s) restant(s)':'Pro terminé'))+'<br>Identifiant de la boutique : <b>'+S.sid+'</b></p><button class="full" style="margin-top:0" onclick="go(\'pro\')">Passer au Pro</button></div>'}
+function vPro(){var left=daysLeft(proEnd()),st=paid()?'Pro actif jusqu’au '+dfr(S.proUntil):(left>=0?'Essai gratuit : '+left+' jour(s) restant(s)':'Pro terminé');
+  var wa=PRO.wa?'https://wa.me/'+PRO.wa+'?text='+encodeURIComponent('Bonjour, je veux passer au Pro.\nBoutique : '+(S.shop||'sans nom')+'\nIdentifiant : '+S.sid+'\nJ’ai envoyé '+fmt(PRO.price)+' par mobile money.'):'';
+  var h='<h1>Passer au Pro</h1><p class="sub">'+st+'</p>';
+  h+='<div class="card"><div class="t">Ce que le Pro ajoute</div><div class="item"><div>📊 Bilan du mois : votre vrai bénéfice</div></div><div class="item"><div>👥 Mode employé : il ne voit ni prix d’achat ni bénéfice</div></div><div class="item"><div>📲 Résumé du jour par WhatsApp</div></div><div class="item"><div>🧾 Reçu client par WhatsApp</div></div><p class="m">Vos ventes, votre stock et vos dettes restent toujours accessibles, même sans Pro.</p></div>';
+  h+='<div class="card"><div class="t">S’abonner : '+fmt(PRO.price)+' par mois</div><p class="m">1. Envoyez '+fmt(PRO.price)+' par mobile money :<br>'+(PRO.om?'Orange Money : <b>'+esc(PRO.om)+'</b><br>':'')+(PRO.mtn?'MTN MoMo : <b>'+esc(PRO.mtn)+'</b><br>':'')+(PRO.om||PRO.mtn?'':'<b>Numéro à renseigner par le propriétaire de l’application.</b><br>')+'2. Prévenez-nous sur WhatsApp avec votre identifiant : <b>'+S.sid+'</b>.<br>3. Vous recevez un code. Tapez-le ci-dessous.</p>'+(wa?'<a class="btn" style="display:block" target="_blank" rel="noopener" href="'+wa+'">Prévenir sur WhatsApp</a>':'')+'</div>';
+  h+='<div class="card"><div class="t">J’ai un code</div><input id="ac" placeholder="Ex. A7K3Q9-261130-5F2D9" autocapitalize="characters" autocomplete="off"><button class="full" onclick="activate()">Activer</button></div>';
+  return h}
+function activate(){var c=$('ac').value.trim().toUpperCase().replace(/\s/g,''),m=/^([A-Z0-9]{6})-(\d{6})-([A-Z0-9]{5})$/.exec(c);
+  if(!m||m[1]!==S.sid||chk(m[1],m[2])!==m[3]){note('Code non valide pour cette boutique.');return}
+  var u='20'+m[2].slice(0,2)+'-'+m[2].slice(2,4)+'-'+m[2].slice(4,6);
+  if(u<today()){note('Ce code est expiré.');return}
+  if(S.proUntil&&u<=S.proUntil){note('Ce code est déjà utilisé.');return}
+  S.proUntil=u;save();render();note('Pro activé jusqu’au '+dfr(u))}
+var EXS=['Accueil::Home','Ventes::Sales','Dettes::Debts','Bilan::Report','Plus::More','Mon carnet::My ledger','Vos ventes, votre stock et vos dettes au même endroit.::Your sales, stock and debts in one place.','Ce que vos clients vous doivent::What your customers owe you','Ventes du jour::Sales today','Ventes du mois::Sales this month','Plus gros soldes à récupérer::Biggest balances to collect','Aucune dette pour le moment. Ajoutez un client dans l’onglet Dettes.::No debts yet. Add a customer in the Debts tab.','Produits à réapprovisionner::Products to restock','Aucun produit en stock bas.::No low-stock products.','Verrouiller le carnet::Lock the ledger','Envoyer le résumé du jour sur WhatsApp::Send today’s summary on WhatsApp','🔒 Résumé du jour (Pro)::🔒 Today’s summary (Pro)','Notez chaque vente. Une vente à crédit s’ajoute à la dette du client.::Record each sale. A credit sale is added to the customer’s debt.','Description::Description','Ex. 2 sacs de riz::e.g. 2 bags of rice','Choisir le produit (le stock baisse tout seul)::Choose the product (stock updates automatically)','Aucun produit du stock::No stock product','Quantité::Quantity','Montant (FCFA)::Amount (FCFA)','Auto si produit::Auto if product','Paiement::Payment','Payé comptant::Paid in cash','Moyen de paiement (si payé comptant)::Payment method (if paid in cash)','Espèces::Cash','Ajouter un autre article au panier::Add another item to the basket','Dernières ventes::Latest sales','Annuler::Cancel','Aucune vente enregistrée.::No sales recorded.','Total des ventes du jour::Total sales today','Reçu client::Customer receipt','Envoyer le reçu::Send receipt','Fermer::Close','Prévenir le patron::Notify the owner','Appuyez pour envoyer le résumé sur WhatsApp.::Tap to send the summary on WhatsApp.','Envoyer sur WhatsApp::Send on WhatsApp','Plus tard::Later','Suivez vos quantités. Vous voyez en rouge ce qui est presque fini.::Track your quantities. Items almost sold out show in red.','Nom du produit::Product name','Ex. Sucre 1 kg::e.g. Sugar 1 kg','Alerte à partir de::Alert at','Prix de vente (FCFA)::Selling price (FCFA)','Facultatif::Optional','Prix d’achat (FCFA)::Purchase price (FCFA)','Sert à calculer le bénéfice::Used to calculate profit','Ajouter le produit::Add product','Ajoutez votre premier produit ci-dessus.::Add your first product above.','Dettes des clients::Customer debts','Qui vous doit combien, et un rappel WhatsApp prêt à envoyer.::Who owes you how much, with a ready WhatsApp reminder.','Nom du client::Customer name','Téléphone WhatsApp (facultatif)::WhatsApp phone (optional)','Ajouter le client::Add customer','Aucun client pour le moment.::No customers yet.','Pas de numéro::No number','En retard::Overdue','Paiement promis le::Promised payment date','Montant::Amount','Reçu::Received','Dette +::Debt +','Rappel WhatsApp::WhatsApp reminder','Relevé::Statement','Supprimer::Delete','Bilan du mois::Monthly report','Ce que la boutique a vraiment gagné.::What the shop really earned.','Mois::Month','Bénéfice du mois::Profit this month','Coût des produits vendus::Cost of goods sold','Dépenses::Expenses','Dont vendu à crédit::Of which sold on credit','Le bénéfice est probablement trop élevé. Renseignez le prix d’achat dans Stock (bouton ✎) et choisissez le produit lors des ventes.::Profit is probably too high. Enter the purchase price in Stock (✎ button) and choose the product when selling.','Dépenses du mois::Expenses this month','Ex. Transport, loyer::e.g. Transport, rent','Ajouter la dépense::Add expense','Aucune dépense ce mois-ci.::No expenses this month.','Quantités disponibles. Pour modifier le stock, voyez le patron.::Available quantities. See the owner to change stock.','Aucun produit.::No products.','Entrez votre code pour ouvrir.::Enter your code to open.','Code secret::Secret code','Ouvrir::Open'];
+var PHS=['Enregistrer la vente::Record sale',' l’unité:: each','Prix non renseigné::No selling price',' – achat :: – cost ',' – prix d’achat à renseigner:: – purchase price missing','ventes sans prix d’achat.::sales without purchase price.','vente sans prix d’achat.::sale without purchase price.','Vente enregistrée : ::Sale recorded: ','. Total du jour : ::. Total today: ','. Article sans produit choisi : stock inchangé.::. Item without a chosen product: stock unchanged.','Article ajouté au panier.::Item added to basket.','Indiquez un montant.::Enter an amount.','Indiquez le nom du produit.::Enter the product name.','Indiquez le nom du client.::Enter the customer name.','Indiquez la description et le montant.::Enter the description and the amount.','Indiquez une quantité valide.::Enter a valid quantity.','Vente annulée.::Sale cancelled.','Dépense enregistrée.::Expense saved.','Stock mis à jour.::Stock updated.','Produit modifié.::Product updated.','Code incorrect.::Wrong code.','Nom enregistré.::Name saved.','Appuyez encore pour confirmer.::Tap again to confirm.','Annuler cette vente ? Le stock et la dette seront corrigés.::Cancel this sale? Stock and debt will be corrected.','Supprimer ce produit ?::Delete this product?','Supprimer ce client et son historique ?::Delete this customer and their history?','Supprimer cette dépense ?::Delete this expense?','Tout effacer ?::Erase everything?','Cela remplace vos données.::This replaces your data.','Données restaurées.::Data restored.','Données effacées.::Data erased.','Sauvegarde non valide. Collez le texte complet.::Invalid backup. Paste the full text.','Le code doit avoir 4 à 8 chiffres.::The code must have 4 to 8 digits.','Bonjour ::Hello ',', petit rappel : votre solde chez nous est de ::, a quick reminder: your balance with us is ',', petit rappel : votre solde chez ::, a quick reminder: your balance at ','. Merci de passer régler quand vous pouvez.::. Please drop by to settle when you can.','Relevé de compte::Account statement','\nClient : ::\nCustomer: ','\nSolde : ::\nBalance: ','nouvelle vente::new sale','\nTotal : ::\nTotal: ','\nÀ crédit. Solde : ::\nOn credit. Balance: ','\nÀ crédit : ::\nOn credit: ','\nPayé comptant::\nPaid in cash','\nEmployé : ::\nEmployee: ','nouvelle dette::new debt','paiement reçu::payment received','\nMontant : ::\nAmount: ','\nReçu du ::\nReceipt of ','\nMerci de votre confiance !::\nThank you for your trust!',' : résumé du :: : summary of ','\nVentes : ::\nSales: ','\nDont à crédit : ::\nOf which on credit: ','\nEncaissé comptant : ::\nCollected in cash: ','\n   Espèces::\n   Cash','\nPaiements de dettes reçus : ::\nDebt payments received: ','\nDettes totales des clients : ::\nTotal customer debts: ','\nÀ réapprovisionner : ::\nTo restock: ','Mode non précisé::Method not specified'];
+var RX=[[/^(\d+) clients? en retard de paiement$/,'$1 customer(s) overdue'],[/^(\d+) en stock$/,'$1 in stock'],[/^crédit : /,'credit: '],[/^À crédit : /,'On credit: '],[/^Total (.+)\. Envoyez le reçu sur WhatsApp\.$/,'Total $1. Send the receipt on WhatsApp.'],[/^Marge : (.+) % des ventes$/,'Margin: $1 % of sales'],[/(\d) à (\d)/g,'$1 at $2'],[/\nLe (\d)/g,'\nOn $1'],[/(\d+) pour (\d)/g,'$1 for $2'],[/ est de (?=\d)/g,' is ']];
+var EX={},PH=[];
+EXS.forEach(function(x){var a=x.split('::');EX[a[0]]=a[1]});
+PHS.forEach(function(x){PH.push(x.split('::'))});
+PH.sort(function(a,b){return b[0].length-a[0].length});
+function tr(s){if(S.lang!=='en'||!s)return s;var t=s.trim();if(EX.hasOwnProperty(t))return s.replace(t,EX[t]);PH.forEach(function(p){if(s.indexOf(p[0])>-1)s=s.split(p[0]).join(p[1])});RX.forEach(function(r){s=s.replace(r[0],r[1])});return s}
+function trDom(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n,L=[];while(n=w.nextNode()){if(n.parentNode.tagName!=='TEXTAREA')L.push(n)}L.forEach(function(x){var v=tr(x.nodeValue);if(v!==x.nodeValue)x.nodeValue=v});root.querySelectorAll('[placeholder]').forEach(function(e){e.setAttribute('placeholder',tr(e.getAttribute('placeholder')))})}
+function render(){render0();if(S.lang==='en'){trDom($('app'));trDom($('nav'))}}
+function setLang(){S.lang=S.lang==='en'?'fr':'en';save();render()}
+function langBtn(){return '<div style="text-align:right"><button class="ghost small" style="border-color:var(--gold)" onclick="setLang()">🌐 '+(S.lang==='en'?'Français':'English')+'</button></div>'}
+var editCid='';
+function editClient(id){editCid=id;render();var c=S.clients.filter(function(x){return x.id===id})[0];if(!c)return;$('cn').value=c.name;$('cp').value=c.phone||'';$('cbtn').textContent=tr('Enregistrer les modifications');window.scrollTo(0,0)}
+function filt(c,v){v=v.toLowerCase();document.querySelectorAll('.'+c).forEach(function(e){e.style.display=(e.getAttribute('data-n')||'').indexOf(v)>-1?'':'none'})}
+var EX2=['Modifier::Edit','Rechercher un client::Search a customer','Rechercher un produit::Search a product','Enregistrer les modifications::Save changes','Réglages, sauvegarde et installation.::Settings, backup and installation.','Abonnement::Subscription','Passer au Pro::Upgrade to Pro','Ma boutique::My shop','Nom de la boutique::Shop name','Ex. Boutique Adèle::e.g. Adele’s Shop','Enregistrer le nom::Save name','Alertes au patron::Alerts to the owner','Sur le téléphone de l’employé : entrez le numéro WhatsApp du patron et le nom de l’employé. Après chaque vente ou dette, un bouton prépare le message. Laissez vide sur le téléphone du patron.::On the employee’s phone: enter the owner’s WhatsApp number and the employee’s name. After each sale or debt, a button prepares the message. Leave empty on the owner’s phone.','Numéro WhatsApp du patron::Owner’s WhatsApp number','Nom de l’employé::Employee name','Ex. Fatou::e.g. Fatou','Enregistrer::Save','Code du patron::Owner code','Un verrou simple pour empêcher un curieux d’ouvrir le carnet. Il ne chiffre pas les données. Si vous l’oubliez, il n’y a pas de récupération : notez-le.::A simple lock to keep curious people out. It does not encrypt the data. If you forget it there is no recovery: write it down.','4 à 8 chiffres (vide = sans code)::4 to 8 digits (empty = no code)','Enregistrer le code::Save code','Mode employé::Employee mode','Avec ce code, l’employé ne voit ni le prix d’achat, ni le bilan, ni les réglages. Il ne peut ni annuler une vente, ni modifier le stock, ni supprimer un client. Il faut d’abord un code patron. Avant de passer le téléphone, appuyez sur « Verrouiller le carnet » (Accueil). C’est un verrou d’écran, pas un coffre-fort.::With this code, the employee sees no purchase prices, no report and no settings. They cannot cancel a sale, change stock or delete a customer. An owner code is required first. Before handing over the phone, tap “Lock the ledger” (Home). It is a screen lock, not a vault.','Code employé (4 à 8 chiffres)::Employee code (4 to 8 digits)','Enregistrer le code employé::Save employee code','Sauvegarder mes données::Back up my data','Vos données sont gardées dans ce navigateur, sur cet appareil. Copiez ce texte et gardez-le dans vos notes ou envoyez-le-vous par WhatsApp.::Your data is kept in this browser, on this device. Copy this text and keep it in your notes or send it to yourself on WhatsApp.','Restaurer une sauvegarde::Restore a backup','Collez ici le texte sauvegardé, puis appuyez sur Restaurer. Cela remplace les données actuelles.::Paste the saved text here, then tap Restore. This replaces the current data.','Collez la sauvegarde ici::Paste the backup here','Restaurer::Restore','Installer sur l’iPhone::Install on iPhone','Dans Safari, appuyez sur Partager, puis sur « Sur l’écran d’accueil ».::In Safari, tap Share, then “Add to Home Screen”.','Effacer toutes les données::Erase all data','Ce que le Pro ajoute::What Pro adds','📊 Bilan du mois : votre vrai bénéfice::📊 Monthly report: your real profit','👥 Mode employé : il ne voit ni prix d’achat ni bénéfice::👥 Employee mode: no purchase prices or profit visible','📲 Résumé du jour par WhatsApp::📲 Daily summary by WhatsApp','🧾 Reçu client par WhatsApp::🧾 Customer receipt by WhatsApp','Vos ventes, votre stock et vos dettes restent toujours accessibles, même sans Pro.::Your sales, stock and debts always stay accessible, even without Pro.','Numéro à renseigner par le propriétaire de l’application.::Number to be filled in by the app owner.','Prévenir sur WhatsApp::Notify on WhatsApp','J’ai un code::I have a code','Activer::Activate','🔒 Fonction Pro::🔒 Pro feature','Voir le Pro::See Pro','Découvrez ce que la boutique gagne vraiment chaque mois.::Find out what the shop really earns each month.','Votre Pro est terminé.::Your Pro has ended.','Vos données restent accessibles. Renouvelez pour retrouver le bilan, le résumé du jour, les reçus et le mode employé.::Your data stays accessible. Renew to get the report, daily summary, receipts and employee mode back.','Renouveler::Renew','Bilan du mois, résumé du jour, reçus client et mode employé.::Monthly report, daily summary, customer receipts and employee mode.'];
+var PH2=['Pro actif jusqu’au ::Pro active until ','Essai Pro gratuit : ::Free Pro trial: ','Essai gratuit : ::Free trial: ',' jour(s) restant(s):: day(s) left','Votre abonnement se termine dans ::Your subscription ends in ',' jour(s).:: day(s).','Pro terminé::Pro ended','Identifiant de la boutique : ::Shop ID: ','S’abonner : ::Subscribe: ',' par mois:: per month','1. Envoyez ::1. Send ',' par mobile money :: by mobile money:','2. Prévenez-nous sur WhatsApp avec votre identifiant : ::2. Tell us on WhatsApp with your ID: ','3. Vous recevez un code. Tapez-le ci-dessous.::3. You receive a code. Type it below.','Le mode employé est une fonction Pro.::Employee mode is a Pro feature.','Définissez d’abord le code du patron.::Set the owner code first.','Le code employé doit être différent.::The employee code must be different.','Code employé activé.::Employee code enabled.','Code employé retiré.::Employee code removed.','Code activé.::Code enabled.','Code retiré.::Code removed.','Enregistré.::Saved.','Code non valide pour cette boutique.::Invalid code for this shop.','Ce code est expiré.::This code has expired.','Ce code est déjà utilisé.::This code was already used.','Pro activé jusqu’au ::Pro activated until ','Client modifié.::Customer updated.','Stock insuffisant : ::Not enough stock: '];
+EX2.forEach(function(x){var a=x.split('::');EX[a[0]]=a[1]});
+PH2.forEach(function(x){PH.push(x.split('::'))});PH.sort(function(a,b){return b[0].length-a[0].length});
+function pushN(m){if(!S.ntfy)return;try{fetch('https://ntfy.sh/'+S.ntfy,{method:'POST',body:tr(m)}).catch(function(){})}catch(e){}}
+function genTopic(){var a=new Uint8Array(12);crypto.getRandomValues(a);$('nt').value='carnet-'+Array.prototype.map.call(a,function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
+function saveNtfy(){S.ntfy=$('nt').value.trim().replace(/[^a-zA-Z0-9_-]/g,'');save();note('Enregistré.')}
+function testPush(){var t=$('nt').value.trim().replace(/[^a-zA-Z0-9_-]/g,'');var er='Envoi impossible. Vérifiez la connexion et le nom secret. Cela ne marche pas sur la page d’essai Claude.';if(!t){note('Entrez d’abord le nom secret.');return}try{fetch('https://ntfy.sh/'+t,{method:'POST',body:tr('Test : le carnet est bien connecté.')}).then(function(r){if(!r.ok)throw 0;note('Test envoyé.')}).catch(function(){note(er)})}catch(e){note(er)}}
+EX['Notifications automatiques']='Automatic notifications';EX['Version hébergée seulement. Sur le téléphone du patron : installez l’application ntfy et abonnez-vous au nom secret ci-dessous. Sur le téléphone de l’employé : entrez le même nom secret.']='Hosted version only. On the owner’s phone: install the ntfy app and subscribe to the secret name below. On the employee’s phone: enter the same secret name.';EX['Nom secret (ex. généré)']='Secret name (e.g. generated)';EX['Générer']='Generate';EX['Envoyer un test']='Send a test';
+[[' (crédit)',' (credit)'],['Entrez d’abord le nom secret.','Enter the secret name first.'],['Test envoyé.','Test sent.'],['Envoi impossible. Vérifiez la connexion et le nom secret. Cela ne marche pas sur la page d’essai Claude.','Sending failed. Check the connection and the secret name. This does not work on the Claude preview page.'],['Test : le carnet est bien connecté.','Test: the ledger is connected.']].forEach(function(p){PH.push(p)});PH.sort(function(a,b){return b[0].length-a[0].length});
+var pendPic='';
+function pickPhoto(inp){var f=inp.files&&inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,240/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);pendPic=c.toDataURL('image/jpeg',0.7);$('pv').innerHTML='<img src="'+pendPic+'" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:10px">'};im.onerror=function(){note('Photo non lisible.')};im.src=r.result};r.readAsDataURL(f)}
+function pphoto(id){var p=S.products.filter(function(x){return x.id===id})[0];return p&&p.pic?p.pic:''}
+function removePic(){pendPic='-';$('pv').innerHTML=''}
+EX['Photo du produit (facultatif)']='Product photo (optional)';EX['Retirer la photo']='Remove photo';
+[['Photo non lisible.','Photo unreadable.'],['Mémoire du téléphone pleine : les dernières modifications ne sont pas sauvegardées. Retirez des photos.','Phone storage full: the latest changes are not saved. Remove some photos.']].forEach(function(p){PH.push(p)});PH.sort(function(a,b){return b[0].length-a[0].length});
+function attData(){var m={},dy={},n=0,tot=0,cr=0,first='';S.sales.forEach(function(s){var k=s.date.slice(0,7);m[k]=(m[k]||0)+s.amount;dy[s.date]=1;n++;tot+=s.amount;if(s.client)cr+=s.amount;if(!first||s.date<first)first=s.date});return {m:m,nd:Object.keys(dy).length,n:n,tot:tot,cr:cr,first:first,ks:Object.keys(m).sort().slice(-6)}}
+function attLink(req){var d=attData(),t=(req?'Demande de mise en relation avec un financeur. J’accepte la transmission de mon attestation.\n\n':'')+'Attestation d’activité – '+(S.shop||'Ma boutique')+'\nIdentifiant : '+S.sid+'\nDepuis le '+dfr(d.first)+' : '+d.n+' ventes, '+d.nd+' jours d’activité, total '+fmt(d.tot)+'\nPart vendue à crédit : '+Math.round(d.cr/d.tot*100)+' %\nDettes clients en cours : '+fmt(totalDebt())+'\n'+d.ks.map(function(k){return k.slice(5)+'/'+k.slice(0,4)+' : '+fmt(d.m[k])}).join('\n')+'\nDocument déclaratif, non vérifié.';var n=req&&PRO.wa?PRO.wa:'';return 'https://wa.me/'+n+'?text='+encodeURIComponent(tr(t))}
+function vAtt(){var d=attData(),h='<h1>Attestation d’activité</h1><p class="sub">Un résumé de votre activité, à montrer à une microfinance ou à une banque.</p>';
+  if(!d.n)return h+'<div class="card"><div class="empty">Aucune vente enregistrée pour le moment.</div></div>';
+  h+='<div class="card"><div class="t">'+esc(S.shop||'Ma boutique')+'</div><p class="m">Depuis le '+dfr(d.first)+' : '+d.n+' ventes, '+d.nd+' jours d’activité, total '+fmt(d.tot)+'. Part vendue à crédit : '+Math.round(d.cr/d.tot*100)+' %. Dettes clients en cours : '+fmt(totalDebt())+'.</p>'+d.ks.map(function(k){return '<div class="item"><div>'+k.slice(5)+'/'+k.slice(0,4)+'</div><div class="amt">'+fmt(d.m[k])+'</div></div>'}).join('')+'<p class="m" style="margin-top:10px">Document déclaratif, généré par l’application à partir des données saisies par le commerçant. Il n’a pas été vérifié.</p></div>';
+  h+='<a class="btn" style="display:block" target="_blank" rel="noopener" href="'+attLink(0)+'">Envoyer l’attestation sur WhatsApp</a>';
+  h+='<div class="card" style="margin-top:12px"><div class="t">Financement</div><p class="m">Aucun prêt n’est garanti. Pour l’instant, nous recensons les commerçants qui souhaiteraient être mis en relation avec un financeur. Vos données ne sont partagées qu’avec votre accord.</p><label style="display:flex;gap:8px;align-items:flex-start"><input id="ok" type="checkbox" style="width:auto;margin-top:3px"><span>J’accepte que mon attestation soit transmise pour être étudiée.</span></label><button class="full" onclick="finReq()">Je suis intéressé</button><div id="fl" style="margin-top:10px"></div></div>';
+  return h}
+function finReq(){if(!$('ok').checked){note('Cochez la case pour confirmer votre accord.');return}$('fl').innerHTML=tr('<a class="btn" style="display:block" target="_blank" rel="noopener" href="'+attLink(1)+'">Envoyer ma demande sur WhatsApp</a>')}
+EX['Attestation d’activité']='Activity statement';EX['Un résumé de vos ventes à montrer à une microfinance ou à une banque.']='A summary of your sales to show to a microfinance institution or a bank.';EX['Voir mon attestation']='See my statement';EX['Un résumé de votre activité, à montrer à une microfinance ou à une banque.']='A summary of your activity to show to a microfinance institution or a bank.';EX['Aucune vente enregistrée pour le moment.']='No sales recorded yet.';EX['Document déclaratif, généré par l’application à partir des données saisies par le commerçant. Il n’a pas été vérifié.']='Declarative document generated by the app from data entered by the merchant. It has not been verified.';EX['Envoyer l’attestation sur WhatsApp']='Send the statement on WhatsApp';EX['Financement']='Financing';EX['Aucun prêt n’est garanti. Pour l’instant, nous recensons les commerçants qui souhaiteraient être mis en relation avec un financeur. Vos données ne sont partagées qu’avec votre accord.']='No loan is guaranteed. For now, we are listing merchants who would like to be introduced to a lender. Your data is only shared with your consent.';EX['J’accepte que mon attestation soit transmise pour être étudiée.']='I agree to my statement being sent for review.';EX['Je suis intéressé']='I’m interested';EX['Envoyer ma demande sur WhatsApp']='Send my request on WhatsApp';
+[['Cochez la case pour confirmer votre accord.','Tick the box to confirm your consent.'],['Demande de mise en relation avec un financeur. J’accepte la transmission de mon attestation.','Request to be introduced to a lender. I agree to my statement being shared.'],['Attestation d’activité – ','Activity statement – '],['\nIdentifiant : ','\nID: '],['Depuis le ','Since '],[' ventes, ',' sales, '],[' jours d’activité, total ',' active days, total '],['\nPart vendue à crédit : ','\nShare sold on credit: '],['. Part vendue à crédit : ','. Share sold on credit: '],['\nDettes clients en cours : ','\nOutstanding customer debts: '],[' %. Dettes clients en cours : ',' %. Outstanding customer debts: '],['\nDocument déclaratif, non vérifié.','\nDeclarative document, not verified.']].forEach(function(p){PH.push(p)});PH.sort(function(a,b){return b[0].length-a[0].length});
+function delSale(id){ask('s'+id,'Annuler cette vente ? Le stock et la dette seront corrigés.',function(){
+  var s=S.sales.filter(function(x){return x.id===id})[0];if(!s)return;
+  if(s.pid)S.products.forEach(function(p){if(p.id===s.pid)p.qty+=s.qty});
+  if(s.cid)S.clients.forEach(function(c){if(c.id===s.cid){c.balance-=s.amount;c.history.push({d:today(),t:'paiement',a:s.amount,n:'Annulation : '+s.label})}});
+  S.sales=S.sales.filter(function(x){return x.id!==id});save();render();note('Vente annulée.')})}
+function late(c){return c.balance>0&&c.due&&c.due<today()}
+function setDue(id,v){S.clients.forEach(function(c){if(c.id===id)c.due=v});save();render()}
+function vLock(){return '<h1>'+esc(S.shop||'Mon carnet')+'</h1><p class="sub">Entrez votre code pour ouvrir.</p><div class="card"><input id="pc" type="password" inputmode="numeric" maxlength="8" placeholder="Code secret"><button class="full" onclick="unlock()">Ouvrir</button></div>'}
+function unlock(){var v=$('pc').value;if(v===S.pin){role='patron';locked=false;tab='home';render()}else if(S.epin&&v===S.epin){role='emp';locked=false;tab='home';render()}else note('Code incorrect.')}
+function saveShop(){S.shop=$('shn').value.trim();save();note('Nom enregistré.')}
+function setPin(){var v=$('pin1').value.trim();if(v&&!/^\d{4,8}$/.test(v)){note('Le code doit avoir 4 à 8 chiffres.');return}S.pin=v;if(!v)S.epin='';save();note(v?'Code activé.':'Code retiré.')}
+
+function vStock(){if(role==='emp')return vStockEmp();
+  var h='<h1>Stock</h1><p class="sub">Suivez vos quantités. Vous voyez en rouge ce qui est presque fini.</p>';
+  h+='<div class="card"><label>Nom du produit</label><input id="pn" placeholder="Ex. Sucre 1 kg">';
+  h+='<div class="row"><div><label>Quantité</label><input id="pq" type="number" inputmode="numeric" min="0" value="0"></div><div><label>Alerte à partir de</label><input id="pm" type="number" inputmode="numeric" min="0" value="3"></div></div>';
+  h+='<label>Prix de vente (FCFA)</label><input id="pp" type="number" inputmode="numeric" min="0" placeholder="Facultatif">';
+  h+='<label>Prix d’achat (FCFA)</label><input id="pk" type="number" inputmode="numeric" min="0" placeholder="Sert à calculer le bénéfice">';
+  h+='<label>Photo du produit (facultatif)</label><input id="pf" type="file" accept="image/*" onchange="pickPhoto(this)"><div id="pv" style="margin-top:8px">'+(editId&&pphoto(editId)?'<img src="'+pphoto(editId)+'" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:10px">':'')+'</div>'+(editId&&pphoto(editId)?'<button class="ghost small" style="margin-top:8px" onclick="removePic()">Retirer la photo</button>':'');
+  h+='<button id="pbtn" class="full" onclick="addProd()">Ajouter le produit</button></div>'+(S.products.length>6?'<input type="search" placeholder="Rechercher un produit" oninput="filt(\'pp\',this.value)" style="margin-bottom:10px">':'')+'<div class="card">';
+  h+=S.products.length?S.products.map(function(p){return '<div class="item pp" data-n="'+esc(p.name.toLowerCase())+'"><div>'+(p.pic?'<img src="'+p.pic+'" alt="" style="float:left;margin-right:10px;width:44px;height:44px;object-fit:cover;border-radius:8px">':'')+'<div class="t">'+esc(p.name)+'</div><div class="m">'+(p.price?fmt(p.price)+' l’unité':'Prix non renseigné')+(p.cost?' – achat '+fmt(p.cost):' – prix d’achat à renseigner')+'</div></div><div class="row" style="flex:0 0 auto"><button class="ghost small" onclick="adj(\''+p.id+'\',-1)">−</button><input type="number" inputmode="numeric" min="0" value="'+p.qty+'" onchange="setQty(\''+p.id+'\',this.value)" class="'+(p.qty<=p.min?'neg':'')+'" style="flex:0 0 64px;width:64px;text-align:center;padding:6px;font-weight:800"><button class="ghost small" onclick="adj(\''+p.id+'\',1)">+</button><button class="ghost small" onclick="editProd(\''+p.id+'\')" aria-label="Modifier">✎</button><button class="ghost small" onclick="delProd(\''+p.id+'\')" aria-label="Supprimer">✕</button></div></div>'}).join(''):'<div class="empty">Ajoutez votre premier produit ci-dessus.</div>';
+  return h+'</div>';
+}
+function addProd(){
+  var n=$('pn').value.trim();if(!n){note('Indiquez le nom du produit.');return}
+  var d={name:n,qty:parseInt($('pq').value,10)||0,min:parseInt($('pm').value,10)||0,price:parseFloat($('pp').value)||0,cost:parseFloat($('pk').value)||0};if(pendPic)d.pic=pendPic==='-'?'':pendPic;if(editId){S.products.forEach(function(p){if(p.id===editId)Object.assign(p,d)});editId='';note('Produit modifié.')}else{d.id=uid();S.products.push(d)}pendPic='';save();render();
+}
+function adj(id,d){S.products.forEach(function(p){if(p.id===id)p.qty=Math.max(0,p.qty+d)});save();render()}
+function delProd(id){ask('p'+id,'Supprimer ce produit ?',function(){S.products=S.products.filter(function(p){return p.id!==id});save();render()})}
+
+function vDebts(){
+  var h='<h1>Dettes des clients</h1><p class="sub">Qui vous doit combien, et un rappel WhatsApp prêt à envoyer.</p>';
+  h+='<div class="card"><label>Nom du client</label><input id="cn" placeholder="Ex. Mama Adèle">';
+  h+='<label>Téléphone WhatsApp (facultatif)</label><input id="cp" type="tel" inputmode="tel" placeholder="Ex. 6 77 00 00 00">';
+  h+='<button id="cbtn" class="full" onclick="addClient()">Ajouter le client</button></div>';
+  var l=S.clients.slice().sort(function(a,b){return b.balance-a.balance});
+  if(l.length>4)h+='<input type="search" placeholder="Rechercher un client" oninput="filt(\'cc\',this.value)" style="margin-bottom:10px">';
+  if(!l.length)return h+'<div class="card"><div class="empty">Aucun client pour le moment.</div></div>';
+  l.forEach(function(c){
+    h+='<div class="card cc" data-n="'+esc((c.name+' '+(c.phone||'')).toLowerCase())+'"><div class="item" style="border:0;padding-top:0"><div><div class="t">'+esc(c.name)+'</div><div class="m">'+esc(c.phone||'Pas de numéro')+(late(c)?' <span class="tag" style="background:var(--red);color:#fff">En retard</span>':'')+'</div></div><div class="amt '+(c.balance>0?'neg':'pos')+'">'+fmt(c.balance)+'</div></div>';
+    h+='<label>Paiement promis le</label><input type="date" value="'+(c.due||'')+'" onchange="setDue(\''+c.id+'\',this.value)" style="margin-bottom:8px">';
+    h+='<div class="row"><input id="m'+c.id+'" type="number" inputmode="numeric" min="0" placeholder="Montant"><button class="small" onclick="mv(\''+c.id+'\',-1)">Reçu</button><button class="ghost small" onclick="mv(\''+c.id+'\',1)">Dette +</button></div>';
+    h+='<div class="row wrap" style="margin-top:8px">';
+    if(c.phone&&c.balance>0)h+='<a class="btn ghost" target="_blank" rel="noopener" href="'+wa(c,0)+'">Rappel WhatsApp</a>';
+    if(c.phone&&c.history.length)h+='<a class="btn ghost" target="_blank" rel="noopener" href="'+wa(c,1)+'">Relevé</a>';
+    h+=''+(role==='emp'?'':'<button class="ghost" onclick="editClient(\''+c.id+'\')">Modifier</button><button class="ghost" onclick="delClient(\''+c.id+'\')">Supprimer</button>')+'</div>';
+    var last=c.history.slice(-3).reverse();
+    if(last.length)h+='<div class="m" style="margin-top:8px">'+last.map(function(x){return dfr(x.d)+' : '+(x.t==='dette'?'+':'−')+fmt(x.a)}).join(' / ')+'</div>';
+    h+='</div>';
+  });
+  return h;
+}
+function wa(c,st){
+  var n=c.phone.replace(/\D/g,'');if(n.length===9)n='237'+n;
+  var msg='Bonjour '+c.name+', petit rappel : votre solde chez '+(S.shop||'nous')+' est de '+fmt(c.balance)+'. Merci de passer régler quand vous pouvez.';
+  if(st)msg='Relevé de compte'+(S.shop?' – '+S.shop:'')+'\nClient : '+c.name+'\n'+c.history.slice(-15).map(function(x){return dfr(x.d)+' : '+(x.t==='dette'?'+':'−')+fmt(x.a)+(x.n?' ('+x.n+')':'')}).join('\n')+'\nSolde : '+fmt(c.balance);
+  return 'https://wa.me/'+n+'?text='+encodeURIComponent(tr(msg));
+}
+function addClient(){
+  var n=$('cn').value.trim();if(!n){note('Indiquez le nom du client.');return}
+  if(editCid){S.clients.forEach(function(c){if(c.id===editCid){c.name=n;c.phone=$('cp').value.trim()}});editCid='';note('Client modifié.')}else S.clients.push({id:uid(),name:n,phone:$('cp').value.trim(),balance:0,history:[]});save();render();
+}
+function mv(id,sign){
+  var a=parseFloat($('m'+id).value);if(isNaN(a)||a<=0){note('Indiquez un montant.');return}
+  S.clients.forEach(function(c){if(c.id===id){c.balance+=sign*a;c.history.push({d:today(),t:sign>0?'dette':'paiement',a:a,n:''});alertTo(shopTag()+(sign>0?'nouvelle dette':'paiement reçu')+'\nClient : '+c.name+'\nMontant : '+fmt(a)+'\nSolde : '+fmt(c.balance)+stamp());pushN(shopTag()+(sign>0?'nouvelle dette ':'paiement reçu ')+fmt(a)+' – '+nowt());}});save();render();
+}
+function delClient(id){ask('c'+id,'Supprimer ce client et son historique ?',function(){S.clients=S.clients.filter(function(c){return c.id!==id});save();render()})}
+
+function vMore(){
+  var h='<h1>Plus</h1><p class="sub">Réglages, sauvegarde et installation.</p>';
+  h+=proStatusCard();
+  h+='<div class="card"><div class="t">Attestation d’activité</div><p class="m">Un résumé de vos ventes à montrer à une microfinance ou à une banque.</p><button class="full" style="margin-top:0" onclick="go(\'att\')">Voir mon attestation</button></div>';
+  h+='<div class="card"><div class="t">Ma boutique</div><label>Nom de la boutique</label><input id="shn" value="'+esc(S.shop)+'" placeholder="Ex. Boutique Adèle"><button class="full" onclick="saveShop()">Enregistrer le nom</button></div>';
+  h+='<div class="card"><div class="t">Alertes au patron</div><p class="m">Sur le téléphone de l’employé : entrez le numéro WhatsApp du patron et le nom de l’employé. Après chaque vente ou dette, un bouton prépare le message. Laissez vide sur le téléphone du patron.</p><label>Numéro WhatsApp du patron</label><input id="bn" type="tel" inputmode="tel" value="'+esc(S.boss)+'" placeholder="Ex. 6 77 00 00 00"><label>Nom de l’employé</label><input id="en" value="'+esc(S.emp)+'" placeholder="Ex. Fatou"><button class="full" onclick="saveAlert()">Enregistrer</button></div>';
+  h+='<div class="card"><div class="t">Notifications automatiques</div><p class="m">Version hébergée seulement. Sur le téléphone du patron : installez l’application ntfy et abonnez-vous au nom secret ci-dessous. Sur le téléphone de l’employé : entrez le même nom secret.</p><input id="nt" value="'+esc(S.ntfy)+'" placeholder="Nom secret (ex. généré)" autocapitalize="none" autocomplete="off"><div class="row" style="margin-top:8px"><button class="ghost" onclick="genTopic()">Générer</button><button class="ghost" onclick="testPush()">Envoyer un test</button></div><button class="full" onclick="saveNtfy()">Enregistrer</button></div>';
+  h+='<div class="card"><div class="t">Code du patron</div><p class="m">Un verrou simple pour empêcher un curieux d’ouvrir le carnet. Il ne chiffre pas les données. Si vous l’oubliez, il n’y a pas de récupération : notez-le.</p><input id="pin1" type="password" inputmode="numeric" maxlength="8" placeholder="4 à 8 chiffres (vide = sans code)"><button class="full" onclick="setPin()">Enregistrer le code</button></div>';
+  h+='<div class="card"><div class="t">Mode employé</div><p class="m">Avec ce code, l’employé ne voit ni le prix d’achat, ni le bilan, ni les réglages. Il ne peut ni annuler une vente, ni modifier le stock, ni supprimer un client. Il faut d’abord un code patron. Avant de passer le téléphone, appuyez sur « Verrouiller le carnet » (Accueil). C’est un verrou d’écran, pas un coffre-fort.</p><input id="pin2" type="password" inputmode="numeric" maxlength="8" placeholder="Code employé (4 à 8 chiffres)"><button class="full" onclick="setEpin()">Enregistrer le code employé</button></div>';
+  h+='<div class="card"><div class="t">Sauvegarder mes données</div><p class="m">Vos données sont gardées dans ce navigateur, sur cet appareil. Copiez ce texte et gardez-le dans vos notes ou envoyez-le-vous par WhatsApp.</p><textarea id="bk" readonly onclick="this.select()">'+esc(JSON.stringify(Object.assign({},S,{pin:'',epin:'',ntfy:'',products:S.products.map(function(p){var q=Object.assign({},p);delete q.pic;return q})})))+'</textarea></div>';
+  h+='<div class="card"><div class="t">Restaurer une sauvegarde</div><p class="m">Collez ici le texte sauvegardé, puis appuyez sur Restaurer. Cela remplace les données actuelles.</p><textarea id="rs" placeholder="Collez la sauvegarde ici"></textarea><button class="full" onclick="restore()">Restaurer</button></div>';
+  h+='<div class="card"><div class="t">Installer sur l’iPhone</div><p class="m">Dans Safari, appuyez sur Partager, puis sur « Sur l’écran d’accueil ».</p></div>';
+  h+='<div class="card"><button class="ghost full" style="margin-top:0" onclick="wipe()">Effacer toutes les données</button></div>';
+  return h;
+}
+function restore(){
+  try{var p=JSON.parse($('rs').value);if(!(p&&p.sales&&p.products&&p.clients))throw 0;ask('rs','Cela remplace vos données.',function(){var o=S.pin,oe=S.epin,nf=S.ntfy,sd=S.sid,fi=S.first,pu=S.proUntil;S=p;S.ntfy=nf||'';S.sid=sd;S.first=fi;S.proUntil=pu;S.shop=S.shop||'';S.boss=S.boss||'';S.emp=S.emp||'';S.exp=S.exp||[];S.pin=o||'';S.epin=oe||'';save();go('home');note('Données restaurées.')})}
+  catch(e){note('Sauvegarde non valide. Collez le texte complet.')}
+}
+function wipe(){ask('wipe','Tout effacer ?',function(){S={sales:[],products:[],clients:[],shop:'',pin:'',boss:'',emp:'',exp:[],epin:'',sid:S.sid,first:S.first,proUntil:S.proUntil};save();go('home');note('Données effacées.')})}
+render();
+</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
